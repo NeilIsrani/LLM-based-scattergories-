@@ -3,7 +3,7 @@ import threading
 
 # Server setup
 HOST = '0.0.0.0'  # Listen on all available network interfaces
-PORT = 5001        # Port for the chat room
+PORT = 5000      # Port for the chat room
 
 clients = []
 nicknames = []
