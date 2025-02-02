@@ -1,5 +1,8 @@
 import socket
 import threading
+import random
+import string
+import time
 
 # Server setup
 HOST = '0.0.0.0'  # Listen on all available network interfaces
@@ -7,6 +10,7 @@ PORT = 5001      # Port for the chat room
 
 clients = []
 nicknames = []
+lobbies = []
 
 def broadcast(message, sender_socket=None):
     """Send message to all clients except the sender."""
@@ -27,6 +31,19 @@ def handle_client(client):
             nickname = nicknames.pop(index)
             broadcast(f"{nickname} has left the chat.".encode('utf-8'))
             break
+
+
+def generate_lobby_id(length=8):
+    # Get the current time in milliseconds to ensure some uniqueness
+    timestamp = int(time.time() * 1000)  # Current time in milliseconds
+    # Generate a random alphanumeric string of the specified length
+    random_part = ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+    
+    # Combine timestamp with random string for uniqueness
+    lobby_id = f"{timestamp}-{random_part}"
+    return lobby_id
+
+
 
 def receive_connections():
     """Accept new connections and start a new thread for each client."""
