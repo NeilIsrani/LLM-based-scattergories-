@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Lobby</title>
+    <title>Game Lobby with WebGL2</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+    <style>
+        body { text-align: center; }
+        canvas { border: 1px solid black; width: 800px; height: 600px; }
+    </style>
 </head>
 <body>
     <h1>Game Lobby</h1>
-    <input type="text" id="commandInput" placeholder="Enter command (CREATE, JOIN <CODE>, or DISCONNECT)">
+    
+    <!-- Command Input -->
+    <input type="text" id="commandInput" placeholder="Enter command (CREATE or JOIN <CODE>)">
     <button onclick="sendCommand()">Send</button>
     <p id="output"></p>
 
+    <!-- WebGL2 Canvas -->
+    <canvas id="glCanvas"></canvas>
+
     <script>
+        // WebSocket connection
         var socket = io.connect("http://3.143.1.16:5001");
 
         socket.on("message", function(data) {
@@ -23,6 +33,23 @@
             var command = document.getElementById("commandInput").value;
             socket.send(command);
         }
+
+        // Initialize WebGL2
+        function initWebGL() {
+            const canvas = document.getElementById("glCanvas");
+            const gl = canvas.getContext("webgl2");
+
+            if (!gl) {
+                console.error("WebGL2 is not supported by your browser.");
+                return;
+            }
+
+            // Set the canvas color
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+
+        window.onload = initWebGL;
     </script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Lobby</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+</head>
+<body>
+    <h1>Game Lobby</h1>
+    <input type="text" id="commandInput" placeholder="Enter command (CREATE, JOIN <CODE>, or DISCONNECT)">
+    <button onclick="sendCommand()">Send</button>
+    <p id="output"></p>
+
+    <script>
+        var socket = io.connect("http://3.143.1.16:5001");
+
+        socket.on("message", function(data) {
+            document.getElementById("output").innerText += data + "\\n";
+        });
+
+        function sendCommand() {
+            var command = document.getElementById("commandInput").value;
+            socket.send(command);
+        }
+    </script>
+</body>
+</html>
+
