@@ -12,8 +12,13 @@ def start_client():
     print(welcome_message)
     
     while True:
-        command = input("Enter command (CREATE or JOIN <CODE>): ").strip()
+        command = input("Enter command (CREATE, JOIN <CODE>, or LEAVE): ").strip()
         if command:
+            if command.upper() == "LEAVE":
+                client.send(command.encode())
+                print("Disconnected from server.")
+                client.close()
+                break
             client.send(command.encode())
             response = client.recv(1024).decode()
             print(response)

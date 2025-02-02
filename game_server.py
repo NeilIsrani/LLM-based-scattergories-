@@ -39,6 +39,8 @@ def handle_client(conn, addr):
                         conn.send(f"Joined game {game_code}\n".encode())
                     else:
                         conn.send("Invalid game code.\n".encode())
+            elif command[0] == "LEAVE":
+                
             else:
                 conn.send("Invalid command. Use CREATE or JOIN <CODE>.\n".encode())
         except:
