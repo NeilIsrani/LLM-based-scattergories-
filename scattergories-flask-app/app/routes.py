@@ -1,6 +1,8 @@
 import random
 import time
-from flask import Blueprint, render_template, request, redirect, url_for, session
+import string
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
+from app.models import db, Player, Game, Lobby
 
 main = Blueprint('main', __name__)
 
@@ -27,12 +29,52 @@ def start_game():
 
 @main.route('/game')
 def game():
-    if 'players' not in session:
-        return redirect(url_for('main.index'))
-    
-    session['prompt'] = generate_prompt()
-    session['start_time'] = time.time()
-    return render_template('game.html', prompt=session['prompt'], players=session['players'])
+    return render_template('game.html')
+
+@main.route('/create_lobby', methods=['POST'])
+def create_lobby():
+    data = request.json
+    player = Player(name=data['name'])
+    game = Game()
+    lobby = Lobby(game=game)
+    lobby.generate_join_code()
+    game.host_id = player.id
+    db.session.add(player)
+    db.session.add(game)
+    db.session.add(lobby)
+    db.session.commit()
+    return jsonify({'join_code': lobby.join_code, 'host_id': player.id}), 201
+
+@main.route('/join_lobby', methods=['POST'])
+def join_lobby():
+    data = request.json
+    lobby = Lobby.query.filter_by(join_code=data['join_code']).first()
+    if not lobby:
+        return jsonify({'message': 'Lobby not found'}), 404
+    player = Player(name=data['name'], game_id=lobby.game.id)
+    db.session.add(player)
+    db.session.commit()
+    return jsonify({'message': 'Player joined successfully'}), 200
+
+@main.route('/start_game_api', methods=['POST'])
+def start_game_api():
+    data = request.json
+    game = Game.query.get(data['game_id'])
+    if game.host_id != data['host_id']:
+        return jsonify({'message': 'Only the host can start the game'}), 403
+    # Logic to start the game
+    return jsonify({'message': 'Game started successfully'}), 200
+
+@main.route('/remove_player', methods=['POST'])
+def remove_player():
+    data = request.json
+    game = Game.query.get(data['game_id'])
+    if game.host_id != data['host_id']:
+        return jsonify({'message': 'Only the host can remove players'}), 403
+    player = Player.query.get(data['player_id'])
+    db.session.delete(player)
+    db.session.commit()
+    return jsonify({'message': 'Player removed successfully'}), 200
 
 @main.route('/submit_answers', methods=['POST'])
 def submit_answers():
