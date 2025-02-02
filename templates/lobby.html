@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Lobby</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+</head>
+<body>
+    <h1>Game Lobby</h1>
+    <h2 id="gameCodeDisplay">Game Code: </h2>
+    <h3>Players in Lobby:</h3>
+    <ul id="playerList"></ul>
+
+    <script>
+        var socket = io.connect("http://3.143.1.16:5001");
+        var gameCode = localStorage.getItem("gameCode");
+
+        if (gameCode) {
+            document.getElementById("gameCodeDisplay").innerText = "Game Code: " + gameCode;
+        }
+
+        socket.emit("join_lobby", { gameCode: gameCode });
+
+        socket.on("update_lobby", function(players) {
+            console.log("Lobby update:", players);
+            var playerList = document.getElementById("playerList");
+            playerList.innerHTML = ""; // Clear list before updating
+            players.forEach(player => {
+                var li = document.createElement("li");
+                li.innerText = player;
+                playerList.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
+

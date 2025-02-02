@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO, send, emit, join_room, leave_room
 import random
 import string
 
@@ -20,20 +20,27 @@ def handle_message(msg):
     if command[0] == "CREATE":
         game_code = generate_game_code()
         lobbies[game_code] = []
-        send(f"Game created. Your game code is: {game_code}", broadcast=True)
+        send(f"Game created. Your game code is: {game_code}", broadcast=False)
 
     elif command[0] == "JOIN" and len(command) == 2:
         game_code = command[1]
         if game_code in lobbies:
             lobbies[game_code].append(request.sid)
-            send(f"Joined game {game_code}", broadcast=True)
+            send(f"Joined game {game_code}", broadcast=False)
+            emit("update_lobby", lobbies[game_code], room=game_code)
         else:
             send("Invalid game code.", broadcast=False)
 
     elif command[0] == "DISCONNECT":
         send("Disconnecting from server.", broadcast=False)
-    else:
-        send("Invalid command. Use CREATE, JOIN <CODE>, or DISCONNECT.", broadcast=False)
+
+@socketio.on("join_lobby")
+def join_lobby(data):
+    game_code = data["gameCode"]
+    if game_code in lobbies:
+        join_room(game_code)
+        lobbies[game_code].append(request.sid)
+        emit("update_lobby", lobbies[game_code], room=game_code)
 
 @app.route("/")
 def index():

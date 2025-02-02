@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Game Lobby</h1>
-    <input type="text" id="commandInput" placeholder="Enter command (CREATE, JOIN <CODE>, or DISCONNECT)">
+    <input type="text" id="commandInput" placeholder="Enter command (CREATE or JOIN <CODE>)">
     <button onclick="sendCommand()">Send</button>
     <p id="output"></p>
 
@@ -16,7 +16,15 @@
         var socket = io.connect("http://3.143.1.16:5001");
 
         socket.on("message", function(data) {
+            console.log("Received:", data);
             document.getElementById("output").innerText += data + "\\n";
+
+            if (data.startsWith("Game created") || data.startsWith("Joined game")) {
+                // Extract game code
+                const gameCode = data.split(": ")[1].trim();
+                localStorage.setItem("gameCode", gameCode); // Store game code
+                window.location.href = "lobby.html"; // Redirect to lobby
+            }
         });
 
         function sendCommand() {
