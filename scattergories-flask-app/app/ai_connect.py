@@ -1,6 +1,6 @@
 from flask import json
 import openai
-from config import Config
+from app.config import Config
 
 class AIValidator:
     def __init__(self):
