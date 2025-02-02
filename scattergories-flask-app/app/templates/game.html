@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Scattergories Game</title>
+</head>
+<body>
+    <header>
+        <h1>Scattergories Game</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Current Round: {{ round }}</h2>
+            <h3>Letter: {{ letter }}</h3>
+            <h3>Time Remaining: <span id="timer">{{ time_remaining }}</span> seconds</h3>
+        </section>
+        <section>
+            <h2>Prompts</h2>
+            <ul>
+                {% for prompt in prompts %}
+                    <li>{{ prompt }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h2>Submit Your Answers</h2>
+            <form id="answer-form" method="POST" action="{{ url_for('main.submit_answers') }}">
+                {% for prompt in prompts %}
+                    <label for="answer-{{ loop.index }}">{{ prompt }}:</label>
+                    <input type="text" id="answer-{{ loop.index }}" name="answers[{{ loop.index }}]" required>
+                {% endfor %}
+                <button type="submit">Submit Answers</button>
+            </form>
+        </section>
+        <section>
+            <h2>Your Score: {{ score }}</h2>
+        </section>
+    </main>
+    <footer>
+    </footer>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Scattergories</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Scattergories!</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Start a New Game</h2>
+            <form action="/start_game" method="POST">
+                <input type="text" name="player_name" placeholder="Enter your name" required>
+                <button type="submit">Start Game</button>
+            </form>
+        </section>
+        <section>
+            <h2>Join an Existing Game</h2>
+            <form action="/join_game" method="POST">
+                <input type="text" name="game_code" placeholder="Enter game code" required>
+                <button type="submit">Join Game</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Scattergories Game</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
