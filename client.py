@@ -1,7 +1,7 @@
 import socket
 import threading
 
-SERVER_IP = "18.221.208.115"  # Get the host's IP address
+SERVER_IP = "3.143.1.16"  # Get the host's IP address
 PORT = 5001  # Same port as the server
 
 nickname = input("Choose a nickname: ")
