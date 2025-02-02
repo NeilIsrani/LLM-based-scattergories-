@@ -3,7 +3,7 @@ import threading
 
 # Server setup
 HOST = '0.0.0.0'  # Listen on all available network interfaces
-PORT = 5000      # Port for the chat room
+PORT = 5001      # Port for the chat room
 
 clients = []
 nicknames = []
@@ -31,7 +31,6 @@ def handle_client(client):
 def receive_connections():
     """Accept new connections and start a new thread for each client."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Allow address reuse
     server.bind((HOST, PORT))
     server.listen()
 
