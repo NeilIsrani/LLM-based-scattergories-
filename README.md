@@ -1,5 +1,5 @@
 # LLM-based Scattergories
-
+![image](https://github.com/user-attachments/assets/b2b6fc16-a973-44df-a2f4-96f39034784c)
 ## Overview
 LLM-based Scattergories is a web-based game that brings the classic party game Scattergories to life using a Large Language Model (LLM). Players are given a letter and a set of categories, and they must come up with words that fit each category while starting with the given letter. The project leverages AI and real-time web technologies to enhance gameplay and engagement.
 
