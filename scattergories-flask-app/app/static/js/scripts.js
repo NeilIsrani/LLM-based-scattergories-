@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     const rollDieButton = document.getElementById('roll-die');
     const dieResult = document.getElementById('die-result');
